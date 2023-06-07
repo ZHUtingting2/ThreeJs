@@ -43093,16 +43093,39 @@ scene.add(axesHelper);
 var clock = new THREE.Clock();
 
 //设置动画
-_gsap.default.to(cube.position, {
+//在X轴方向移动
+var animate1 = _gsap.default.to(cube.position, {
   x: 5,
   duration: 5,
-  ease: "power1.inOut"
+  ease: "power1.inOut",
+  repeat: 2,
+  //设置重复的次数，无限制循环值就为-1
+  yoyo: true,
+  //往返运动
+  delay: 2,
+  //延迟两秒
+  onComplete: function onComplete() {
+    console.log("动画完成");
+  },
+  onStart: function onStart() {
+    console.log("动画开始");
+  }
 }); //动画cube的位置，是以长度为5的X轴方向，时间为5秒的属性进行移动。ease代表速度运动曲线 
+//在X轴旋转
 _gsap.default.to(cube.rotation, {
   x: 2 * Math.PI,
   duration: 5,
   ease: "power1.inOut"
 }); //旋转360度
+//监听屏幕双击事件
+window.addEventListener("dblclick", function () {
+  //请注意，运动状态isActive是一个函数方法！！！必须要加括号！
+  if (animate1.isActive()) {
+    animate1.pause(); //如果在运动状态则暂定动画
+  } else {
+    animate1.resume(); //恢复运动
+  }
+});
 
 function render() {
   renderer.render(scene, camera);
@@ -43135,7 +43158,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61614" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61848" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

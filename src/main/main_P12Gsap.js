@@ -41,8 +41,33 @@ scene.add(axesHelper);
 const clock = new THREE.Clock();
 
 //设置动画
-gsap.to(cube.position, { x: 5, duration: 5, ease: "power1.inOut" });//动画cube的位置，是以长度为5的X轴方向，时间为5秒的属性进行移动。ease代表速度运动曲线 
-gsap.to(cube.rotation, { x: 2 * Math.PI, duration: 5, ease: "power1.inOut" })//旋转360度
+//在X轴方向移动
+var animate1 = gsap.to(cube.position, {
+    x: 5,
+    duration: 5,
+    ease: "power1.inOut",
+    repeat: 2,//设置重复的次数，无限制循环值就为-1
+    yoyo: true,//往返运动
+    delay: 2,//延迟两秒
+    onComplete: () => { console.log("动画完成") },
+    onStart: () => { console.log("动画开始") }
+});//动画cube的位置，是以长度为5的X轴方向，时间为5秒的属性进行移动。ease代表速度运动曲线 
+//在X轴旋转
+gsap.to(cube.rotation, {
+    x: 2 * Math.PI,
+    duration: 5,
+    ease: "power1.inOut"
+})//旋转360度
+//监听屏幕双击事件
+window.addEventListener("dblclick", () => {
+    //请注意，运动状态isActive是一个函数方法！！！必须要加括号！
+    if (animate1.isActive()) {
+        animate1.pause();//如果在运动状态则暂定动画
+    } else {
+        animate1.resume();//恢复运动
+    }
+
+})
 
 function render() {
     renderer.render(scene, camera);
