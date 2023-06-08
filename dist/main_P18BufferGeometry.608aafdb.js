@@ -45525,7 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"main/main_P16datGui.js":[function(require,module,exports) {
+},{}],"main/main_P18BufferGeometry.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45551,49 +45551,17 @@ camera.position.set(0, 0, 10); //x, y, z坐标
 scene.add(camera);
 
 //4.创建物体、添加物体
-var cubeGeomery = new THREE.BoxGeometry(1, 1, 1);
+var geomery = new THREE.BufferGeometry();
+var vertices = Float32Array([-1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0]);
 var cubeMaterial = new THREE.MeshBasicMaterial({
   color: 0xffff00
 });
-var cube = new THREE.Mesh(cubeGeomery, cubeMaterial);
+var cube = new THREE.Mesh(geomery, cubeMaterial);
 
 //旋转
 cube.rotation.set(Math.PI / 4, 0, 0, "XYZ"); //Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转
 scene.add(cube);
 console.log(cube);
-
-//使用gui
-//添加gui
-var gui = new dat.GUI();
-gui.add(cube.position, "x").min(0).max(5).step(0.01).name("移动X坐标").onChange(function (value) {
-  console.log("值被修改了:", value);
-}) //添加x方向的移动位置，最小为0，最大为5。每次移动0.01。 添加名字。改变位置时触发的方法
-.onFinishChange(function (value) {
-  console.log("完全停下来：", value);
-});
-//修改物体的颜色  onChange记录每次变化的值
-var params = {
-  color: "#ffff00",
-  fn: function fn() {
-    _gsap.default.to(cube.position, {
-      x: 5,
-      duration: 2,
-      yoyo: true,
-      repeat: -1
-    });
-  }
-};
-gui.addColor(params, "color").onChange(function (value) {
-  console.log("修改颜色:", value);
-  cube.material.color.set(value);
-});
-//是否显示物体
-gui.add(cube, "visible").name("是否显示"); //cube有一个属性visible 值为true false
-//点击物体运动
-gui.add(params, "fn").name("立方体运动");
-//建立文件夹，文件夹下面可以添加多个选项
-var folder = gui.addFolder("设置立方体");
-folder.add(cube.material, "wireframe");
 
 //5.初始化渲染器
 var renderer = new THREE.WebGLRenderer();
@@ -45663,7 +45631,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60792" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59561" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
@@ -45807,5 +45775,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P16datGui.js"], null)
-//# sourceMappingURL=/main_P16datGui.dd4fd808.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P18BufferGeometry.js"], null)
+//# sourceMappingURL=/main_P18BufferGeometry.608aafdb.js.map
