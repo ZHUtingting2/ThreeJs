@@ -34,6 +34,7 @@ document.body.appendChild(renderer.domElement);
 
 //6.使用控制器查看3D物体
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;//设置控制器的阻尼，让控制器更有真实效果，但是必须在动画循环里调用 .update
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
@@ -70,8 +71,18 @@ window.addEventListener("dblclick", () => {
 })
 
 function render() {
+    controls.update();
     renderer.render(scene, camera);
     requestAnimationFrame(render);//请求动画帧函数。渲染每一帧
 }
 
 render();
+
+//监听画面尺寸变化，更新渲染画面
+window.addEventListener("resize", () => {
+    console.log("画面变化了");
+    camera.aspect = window.innerWidth / window.innerHeight;//更新摄像头
+    camera.updateProjectionMatrix();//更新摄像头的投影矩阵
+    renderer.setSize(window.innerWidth, window.innerHeight);//更新渲染器
+    renderer.setPixelRatio(window.devicePixelRatio);//设置渲染器的像素比
+})
