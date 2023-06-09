@@ -1,8 +1,9 @@
+//目标：打造酷炫的三角形
+
 import * as THREE from "three"
 //导入轨道控制器
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-//目标：BufferAttribute 
 //导入动画库
 import gsap from "gsap";
 //导入dat.gui
@@ -19,19 +20,27 @@ camera.position.set(0, 0, 10);//x, y, z坐标
 scene.add(camera);
 
 //4.创建物体、添加物体
-const geomery = new THREE.BufferGeometry();
-const vertices = new Float32Array([
-    -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0,
-]);
-//设置顶点
-geomery.setAttribute("position", new THREE.BufferAttribute(vertices, 3));//(vertices, 3)每3个值作为1个坐标
-const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const mesh = new THREE.Mesh(geomery, material);
-scene.add(mesh);
-console.log(mesh);
+for (let i = 0; i < 50; i++) {
+    const geomery = new THREE.BufferGeometry();
+    const positionArray = new Float32Array(9);
+    //每一个三角形，需要3个顶点，一个顶点需要3个值，所以是是j<9
+    for (let j = 0; j < 9; j++) {
+        //positionArray[j] = Math.random() * 5;//随机0-5
+        positionArray[j] = Math.random() * 10 - 5;//随机-5到5的坐标距离，所以这个跨度为10，在减去5
+    }
+    //设置顶点
+    geomery.setAttribute("position", new THREE.BufferAttribute(positionArray, 3));//(vertices, 3)每3个值作为1个坐标
+    let color = new THREE.Color(Math.random(), Math.random(), Math.random())//因为颜色是三个值组成的
+    const material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.5 });//颜色，材质，透明度
+    const mesh = new THREE.Mesh(geomery, material);
+    scene.add(mesh);
+    console.log(mesh);
+}
 
+
+const geomery2 = new THREE.BufferGeometry();
 const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const cube = new THREE.Mesh(geomery, cubeMaterial);
+const cube = new THREE.Mesh(geomery2, cubeMaterial);
 
 
 

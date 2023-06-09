@@ -1,8 +1,9 @@
+//目标：详细认识材质
+
 import * as THREE from "three"
 //导入轨道控制器
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-//目标：BufferAttribute 
 //导入动画库
 import gsap from "gsap";
 //导入dat.gui
@@ -19,20 +20,14 @@ camera.position.set(0, 0, 10);//x, y, z坐标
 scene.add(camera);
 
 //4.创建物体、添加物体
-const geomery = new THREE.BufferGeometry();
-const vertices = new Float32Array([
-    -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0,
-]);
-//设置顶点
-geomery.setAttribute("position", new THREE.BufferAttribute(vertices, 3));//(vertices, 3)每3个值作为1个坐标
-const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const mesh = new THREE.Mesh(geomery, material);
-scene.add(mesh);
-console.log(mesh);
+const textureLoader = new THREE.TextureLoader();
+//const doorColorTexture = textureLoader.load("./textures/pic2.jpeg");//创建纹理
+const doorColorTexture = textureLoader.load(require('../assets/imgs/pic2.jpeg'));//创建纹理
+const cubGeomery = new THREE.BoxGeometry(1, 1, 1);
+const basicMaterial = new THREE.MeshBasicMaterial({ color: "#ffff00", map: doorColorTexture});
+const cube = new THREE.Mesh(cubGeomery, basicMaterial);
 
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const cube = new THREE.Mesh(geomery, cubeMaterial);
-
+scene.add(cube)
 
 
 //旋转

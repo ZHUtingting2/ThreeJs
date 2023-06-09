@@ -45525,7 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"main/main_P18BufferGeometry.js":[function(require,module,exports) {
+},{}],"main/main_P19triangle.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45535,11 +45535,14 @@ var dat = _interopRequireWildcard(require("dat.gui"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+//目标：打造酷炫的三角形
+
 //导入轨道控制器
 
-//目标：安装dat.gui 命令npm install --save dat.gui
 //导入动画库
+
 //导入dat.gui
+
 //1.创建场景
 var scene = new THREE.Scene();
 
@@ -45551,20 +45554,31 @@ camera.position.set(0, 0, 10); //x, y, z坐标
 scene.add(camera);
 
 //4.创建物体、添加物体
-var geomery = new THREE.BufferGeometry();
-var vertices = new Float32Array([-1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0]);
-//设置顶点
-geomery.setAttribute("position", new THREE.BufferAttribute(vertices, 3)); //(vertices, 3)每3个值作为1个坐标
-var material = new THREE.MeshBasicMaterial({
-  color: 0xffff00
-});
-var mesh = new THREE.Mesh(geomery, material);
-scene.add(mesh);
-console.log(mesh);
+for (var i = 0; i < 50; i++) {
+  var geomery = new THREE.BufferGeometry();
+  var positionArray = new Float32Array(9);
+  //每一个三角形，需要3个顶点，一个顶点需要3个值，所以是是j<9
+  for (var j = 0; j < 9; j++) {
+    //positionArray[j] = Math.random() * 5;//随机0-5
+    positionArray[j] = Math.random() * 10 - 5; //随机-5到5的坐标距离，所以这个跨度为10，在减去5
+  }
+  //设置顶点
+  geomery.setAttribute("position", new THREE.BufferAttribute(positionArray, 3)); //(vertices, 3)每3个值作为1个坐标
+  var color = new THREE.Color(Math.random(), Math.random(), Math.random()); //因为颜色是三个值组成的
+  var material = new THREE.MeshBasicMaterial({
+    color: color,
+    transparent: true,
+    opacity: 0.5
+  }); //颜色，材质，透明度
+  var mesh = new THREE.Mesh(geomery, material);
+  scene.add(mesh);
+  console.log(mesh);
+}
+var geomery2 = new THREE.BufferGeometry();
 var cubeMaterial = new THREE.MeshBasicMaterial({
   color: 0xffff00
 });
-var cube = new THREE.Mesh(geomery, cubeMaterial);
+var cube = new THREE.Mesh(geomery2, cubeMaterial);
 
 //旋转
 cube.rotation.set(Math.PI / 4, 0, 0, "XYZ"); //Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转
@@ -45639,7 +45653,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50138" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54935" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
@@ -45783,5 +45797,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P18BufferGeometry.js"], null)
-//# sourceMappingURL=/main_P18BufferGeometry.608aafdb.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P19triangle.js"], null)
+//# sourceMappingURL=/main_P19triangle.06b54f88.js.map
