@@ -1,4 +1,4 @@
-//目标：详细认识材质
+//目标：详细认识材质纹理属性
 
 import * as THREE from "three"
 //导入轨道控制器
@@ -23,6 +23,14 @@ scene.add(camera);
 const textureLoader = new THREE.TextureLoader();
 //const doorColorTexture = textureLoader.load("./textures/pic2.jpeg");//创建纹理
 const doorColorTexture = textureLoader.load(require('../assets/imgs/pic2.jpeg'));//创建纹理
+console.log(doorColorTexture);
+//doorColorTexture.offset.x = 0.5
+doorColorTexture.offset.set(0.5, 0.5);//纹理偏移。 范围是0-1
+doorColorTexture.center.set(0.5, 0.5);//纹理旋转原点。及旋转的中心点
+doorColorTexture.repeat.set(2, 3)//纹理重复。x重复两次，y重复3次
+doorColorTexture.wrapS = THREE.RepeatWrapping;//设置纹理重复的模式（水平方向）
+doorColorTexture.wrapT = THREE.MirroredRepeatWrapping;//设置纹理重复的模式（垂直方向）
+doorColorTexture.rotation = Math.PI / 4;//纹理旋转。旋转了90度
 const cubGeomery = new THREE.BoxGeometry(1, 1, 1);
 const basicMaterial = new THREE.MeshBasicMaterial({ color: "#ffff00", map: doorColorTexture});
 const cube = new THREE.Mesh(cubGeomery, basicMaterial);

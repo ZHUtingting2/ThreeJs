@@ -45527,7 +45527,7 @@ var _default = index;
 exports.default = _default;
 },{}],"assets/imgs/pic2.jpeg":[function(require,module,exports) {
 module.exports = "/pic2.44c0d02f.jpeg";
-},{}],"main/main_P21material.js":[function(require,module,exports) {
+},{}],"main/main_P21texture.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45792,5 +45792,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P21material.js"], null)
-//# sourceMappingURL=/main_P21material.8cfda68b.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P21texture.js"], null)
+//# sourceMappingURL=/main_P21texture.aa58de89.js.map
