@@ -45525,9 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"assets/imgs/pic2.jpeg":[function(require,module,exports) {
-module.exports = "/pic2.44c0d02f.jpeg";
-},{}],"main/main_P21texture.js":[function(require,module,exports) {
+},{}],"main/main_P23textureAndMipmap.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45537,7 +45535,7 @@ var dat = _interopRequireWildcard(require("dat.gui"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-//目标：详细认识材质纹理属性
+//目标：纹理显示算法与mipmap。透明材质与纹理
 
 //导入轨道控制器
 
@@ -45557,20 +45555,15 @@ scene.add(camera);
 
 //4.创建物体、添加物体
 var textureLoader = new THREE.TextureLoader();
-//const doorColorTexture = textureLoader.load("./textures/pic2.jpeg");//创建纹理
-var doorColorTexture = textureLoader.load(require('../assets/imgs/pic2.jpeg')); //创建纹理
-console.log(doorColorTexture);
-//doorColorTexture.offset.x = 0.5
-doorColorTexture.offset.set(0.5, 0.5); //纹理偏移。 范围是0-1
-doorColorTexture.center.set(0.5, 0.5); //纹理旋转原点。及旋转的中心点
-doorColorTexture.repeat.set(2, 3); //纹理重复。x重复两次，y重复3次
-doorColorTexture.wrapS = THREE.RepeatWrapping; //设置纹理重复的模式（水平方向）
-doorColorTexture.wrapT = THREE.MirroredRepeatWrapping; //设置纹理重复的模式（垂直方向）
-doorColorTexture.rotation = Math.PI / 4; //纹理旋转。旋转了90度
+var texture = textureLoader.load("./textures/pic2.jpeg"); //创建纹理
+//texture纹理显示设置
+texture.minFilter = THREE.NearestFilter;
+texture.magFilter = THREE.NearestFilter;
+console.log(texture);
 var cubGeomery = new THREE.BoxGeometry(1, 1, 1);
 var basicMaterial = new THREE.MeshBasicMaterial({
   color: "#ffff00",
-  map: doorColorTexture
+  map: texture
 });
 var cube = new THREE.Mesh(cubGeomery, basicMaterial);
 scene.add(cube);
@@ -45623,7 +45616,7 @@ window.addEventListener("resize", function () {
   renderer.setSize(window.innerWidth, window.innerHeight); //更新渲染器
   renderer.setPixelRatio(window.devicePixelRatio); //设置渲染器的像素比
 });
-},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/controls/OrbitControls":"../node_modules/three/examples/jsm/controls/OrbitControls.js","gsap":"../node_modules/gsap/index.js","dat.gui":"../node_modules/dat.gui/build/dat.gui.module.js","../assets/imgs/pic2.jpeg":"assets/imgs/pic2.jpeg"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"three":"../node_modules/three/build/three.module.js","three/examples/jsm/controls/OrbitControls":"../node_modules/three/examples/jsm/controls/OrbitControls.js","gsap":"../node_modules/gsap/index.js","dat.gui":"../node_modules/dat.gui/build/dat.gui.module.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -45792,5 +45785,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P21texture.js"], null)
-//# sourceMappingURL=/main_P21texture.aa58de89.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P23textureAndMipmap.js"], null)
+//# sourceMappingURL=/main_P23textureAndMipmap.cd586c2c.js.map
