@@ -1,4 +1,4 @@
-//目标：纹理显示算法与mipmap。透明材质与纹理
+//目标：AO环境遮挡贴图
 
 import * as THREE from "three"
 //导入轨道控制器
@@ -24,6 +24,8 @@ scene.add(camera);
 const textureLoader = new THREE.TextureLoader();
 const texture = textureLoader.load("./textures/pic2.jpeg");//创建纹理
 const alTextture = textureLoader.load("./textures/white.jpeg");
+const AoTextture = textureLoader.load("./textures/door.jpeg");
+
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
@@ -35,19 +37,20 @@ const basicMaterial = new THREE.MeshBasicMaterial({
     map: texture,  
     alphaMap: alTextture, //利用黑白图片设置做透明纹理。黑色背景能设置为透明
     transparent: true, //材质是否透明
-    opacity: 0.5,//透明度
-    side: THREE.BackSide,//定义要渲染哪一面，正面、背面、
+    aoMap: AoTextture,//环境贴图
+    aoMapIntensity: 1,//换境贴图强度
 });
 const cube = new THREE.Mesh(cubGeomery, basicMaterial);
-scene.add(cube)
+scene.add(cube);
+//给cube设置第二组UV
+cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2))
 //添加平面
-const plane = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(1, 1),
-    basicMaterial
-);
+const planeGeometry = new THREE.PlaneBufferGeometry(1,1)
+const plane = new THREE.Mesh(planeGeometry, basicMaterial);
 plane.position.set(3, 0, 0);
 scene.add(plane);
-
+//给平面设置第二组UV
+planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
 
 //旋转
 //cube.rotation.set(Math.PI / 4, 0, 0, "XYZ");//Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转

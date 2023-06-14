@@ -45525,7 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"main/main_P23textureAndMipmap.js":[function(require,module,exports) {
+},{}],"main/main_P25AO.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45535,7 +45535,7 @@ var dat = _interopRequireWildcard(require("dat.gui"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-//目标：纹理显示算法与mipmap。透明材质与纹理
+//目标：AO环境遮挡贴图
 
 //导入轨道控制器
 
@@ -45557,6 +45557,8 @@ scene.add(camera);
 var textureLoader = new THREE.TextureLoader();
 var texture = textureLoader.load("./textures/pic2.jpeg"); //创建纹理
 var alTextture = textureLoader.load("./textures/white.jpeg");
+var AoTextture = textureLoader.load("./textures/door.jpeg");
+
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
@@ -45569,17 +45571,22 @@ var basicMaterial = new THREE.MeshBasicMaterial({
   //利用黑白图片设置做透明纹理。黑色背景能设置为透明
   transparent: true,
   //材质是否透明
-  opacity: 0.5,
-  //透明度
-  side: THREE.BackSide //定义要渲染哪一面，正面、背面、
+  aoMap: AoTextture,
+  //环境贴图
+  aoMapIntensity: 1 //换境贴图强度
 });
 
 var cube = new THREE.Mesh(cubGeomery, basicMaterial);
 scene.add(cube);
+//给cube设置第二组UV
+cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2));
 //添加平面
-var plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(1, 1), basicMaterial);
+var planeGeometry = new THREE.PlaneBufferGeometry(1, 1);
+var plane = new THREE.Mesh(planeGeometry, basicMaterial);
 plane.position.set(3, 0, 0);
 scene.add(plane);
+//给平面设置第二组UV
+planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2));
 
 //旋转
 //cube.rotation.set(Math.PI / 4, 0, 0, "XYZ");//Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转
@@ -45798,5 +45805,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P23textureAndMipmap.js"], null)
-//# sourceMappingURL=/main_P23textureAndMipmap.cd586c2c.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P25AO.js"], null)
+//# sourceMappingURL=/main_P25AO.288f6b8a.js.map
