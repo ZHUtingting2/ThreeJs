@@ -1,4 +1,4 @@
-//目标：AO环境遮挡贴图
+//目标：标准网格材质与光照物理效果
 
 import * as THREE from "three"
 //导入轨道控制器
@@ -22,41 +22,50 @@ scene.add(camera);
 
 //4.创建物体、添加物体
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load("./textures/pic2.jpeg");//创建纹理
-const alTextture = textureLoader.load("./textures/white.jpeg");
-const AoTextture = textureLoader.load("./textures/door.jpeg");
+const texture = textureLoader.load("./textures/door.png");//创建纹理
+const alTextture = textureLoader.load("./textures/white.png");
+const AoTextture = textureLoader.load("./textures/doorLine.png");
+const heightTextture = textureLoader.load("./textures/height2.png");//导入置换贴图
+const roughnessTextture = textureLoader.load("./textures/roughness.png");//导入粗糙度贴图
+const metalnessTextture = textureLoader.load("./textures/metalness.png");
 
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
 console.log(texture);
 
-const cubGeomery = new THREE.BoxGeometry(1, 1, 1);
-const basicMaterial = new THREE.MeshBasicMaterial({ 
+const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+const material = new THREE.MeshStandardMaterial({ //这个材质必须要有光才能看见
     color: "#ffff00", 
     map: texture,  
     alphaMap: alTextture, //利用黑白图片设置做透明纹理。黑色背景能设置为透明
     transparent: true, //材质是否透明
     aoMap: AoTextture,//环境贴图
     aoMapIntensity: 1,//换境贴图强度
+    displacementMap: heightTextture,
+    displacementScale: 0.08,//最大突出限制0.3公分
+    roughness: 1, //粗糙度为0，代表非常光滑
+    roughnessMap: roughnessTextture,
+    metalness: 1,//金属度，1为金属
+    metalnessMap: metalnessTextture,
 });
-const cube = new THREE.Mesh(cubGeomery, basicMaterial);
+const cube = new THREE.Mesh(cubGeomery, material);
 scene.add(cube);
 //给cube设置第二组UV
 cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2))
 //添加平面
-const planeGeometry = new THREE.PlaneBufferGeometry(1,1)
-const plane = new THREE.Mesh(planeGeometry, basicMaterial);
-plane.position.set(3, 0, 0);
+const planeGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200)//设置凹凸。平面是两个坐标点
+const plane = new THREE.Mesh(planeGeometry, material);
+plane.position.set(1.5, 0, 0);
 scene.add(plane);
 //给平面设置第二组UV
 planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
-
-//旋转
-//cube.rotation.set(Math.PI / 4, 0, 0, "XYZ");//Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转
-//scene.add(cube);
-//console.log(cube);
-
+//给物体追加灯光
+const light = new THREE.AmbientLight(0xffffff, 0.5);//环境光，方向是从四面八方过来的
+scene.add(light);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)//直线光，平行光束.
+directionalLight.position.set(10, 10, 10)//直线光源位置。如果没有环境光，背光面就可以看到是黑的
+scene.add(directionalLight)
 
 //5.初始化渲染器
 const renderer = new THREE.WebGLRenderer();

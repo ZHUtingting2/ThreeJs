@@ -45525,7 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"main/main_P25AO.js":[function(require,module,exports) {
+},{}],"main/main_P27PBR.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45535,7 +45535,7 @@ var dat = _interopRequireWildcard(require("dat.gui"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-//目标：AO环境遮挡贴图
+//目标：标准网格材质与光照物理效果
 
 //导入轨道控制器
 
@@ -45555,16 +45555,20 @@ scene.add(camera);
 
 //4.创建物体、添加物体
 var textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load("./textures/pic2.jpeg"); //创建纹理
-var alTextture = textureLoader.load("./textures/white.jpeg");
-var AoTextture = textureLoader.load("./textures/door.jpeg");
+var texture = textureLoader.load("./textures/door.png"); //创建纹理
+var alTextture = textureLoader.load("./textures/white.png");
+var AoTextture = textureLoader.load("./textures/doorLine.png");
+var heightTextture = textureLoader.load("./textures/height2.png"); //导入置换贴图
+var roughnessTextture = textureLoader.load("./textures/roughness.png"); //导入粗糙度贴图
+var metalnessTextture = textureLoader.load("./textures/metalness.png");
 
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
 console.log(texture);
-var cubGeomery = new THREE.BoxGeometry(1, 1, 1);
-var basicMaterial = new THREE.MeshBasicMaterial({
+var cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+var material = new THREE.MeshStandardMaterial({
+  //这个材质必须要有光才能看见
   color: "#ffff00",
   map: texture,
   alphaMap: alTextture,
@@ -45573,25 +45577,35 @@ var basicMaterial = new THREE.MeshBasicMaterial({
   //材质是否透明
   aoMap: AoTextture,
   //环境贴图
-  aoMapIntensity: 1 //换境贴图强度
+  aoMapIntensity: 1,
+  //换境贴图强度
+  displacementMap: heightTextture,
+  displacementScale: 0.08,
+  //最大突出限制0.3公分
+  roughness: 1,
+  //粗糙度为0，代表非常光滑
+  roughnessMap: roughnessTextture,
+  metalness: 1,
+  //金属度，1为金属
+  metalnessMap: metalnessTextture
 });
-
-var cube = new THREE.Mesh(cubGeomery, basicMaterial);
+var cube = new THREE.Mesh(cubGeomery, material);
 scene.add(cube);
 //给cube设置第二组UV
 cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2));
 //添加平面
-var planeGeometry = new THREE.PlaneBufferGeometry(1, 1);
-var plane = new THREE.Mesh(planeGeometry, basicMaterial);
-plane.position.set(3, 0, 0);
+var planeGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200); //设置凹凸。平面是两个坐标点
+var plane = new THREE.Mesh(planeGeometry, material);
+plane.position.set(1.5, 0, 0);
 scene.add(plane);
 //给平面设置第二组UV
 planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2));
-
-//旋转
-//cube.rotation.set(Math.PI / 4, 0, 0, "XYZ");//Math.pi代表π，π/4就等于45°，所以此处就代表x轴旋转了45°，Y,Z为0不变，按照“XYZ”方向旋转
-//scene.add(cube);
-//console.log(cube);
+//给物体追加灯光
+var light = new THREE.AmbientLight(0xffffff, 0.5); //环境光，方向是从四面八方过来的
+scene.add(light);
+var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); //直线光，平行光束.
+directionalLight.position.set(10, 10, 10); //直线光源位置。如果没有环境光，背光面就可以看到是黑的
+scene.add(directionalLight);
 
 //5.初始化渲染器
 var renderer = new THREE.WebGLRenderer();
@@ -45661,7 +45675,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50678" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60952" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
@@ -45805,5 +45819,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P25AO.js"], null)
-//# sourceMappingURL=/main_P25AO.288f6b8a.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P27PBR.js"], null)
+//# sourceMappingURL=/main_P27PBR.19a92341.js.map
