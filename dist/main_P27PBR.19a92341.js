@@ -45560,16 +45560,19 @@ var alTextture = textureLoader.load("./textures/white.png");
 var AoTextture = textureLoader.load("./textures/doorLine.png");
 var heightTextture = textureLoader.load("./textures/height2.png"); //导入置换贴图
 var roughnessTextture = textureLoader.load("./textures/roughness.png"); //导入粗糙度贴图
-var metalnessTextture = textureLoader.load("./textures/metalness.png");
+var metalnessTextture = textureLoader.load("./textures/metalness.png"); //导入金属贴图
+var normalTextture = textureLoader.load("./textures/normal.png"); //导入法线贴图
 
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
 console.log(texture);
-var cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+
+//const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+var cubGeomery = new THREE.BoxBufferGeometry(1, 1, 1, 100, 100, 100);
 var material = new THREE.MeshStandardMaterial({
   //这个材质必须要有光才能看见
-  color: "#ffff00",
+  //color: "#ffff00", 
   map: texture,
   alphaMap: alTextture,
   //利用黑白图片设置做透明纹理。黑色背景能设置为透明
@@ -45587,7 +45590,8 @@ var material = new THREE.MeshStandardMaterial({
   roughnessMap: roughnessTextture,
   metalness: 1,
   //金属度，1为金属
-  metalnessMap: metalnessTextture
+  metalnessMap: metalnessTextture,
+  normalMap: normalTextture
 });
 var cube = new THREE.Mesh(cubGeomery, material);
 scene.add(cube);
@@ -45675,7 +45679,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60952" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50004" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

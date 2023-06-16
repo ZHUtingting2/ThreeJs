@@ -27,16 +27,18 @@ const alTextture = textureLoader.load("./textures/white.png");
 const AoTextture = textureLoader.load("./textures/doorLine.png");
 const heightTextture = textureLoader.load("./textures/height2.png");//导入置换贴图
 const roughnessTextture = textureLoader.load("./textures/roughness.png");//导入粗糙度贴图
-const metalnessTextture = textureLoader.load("./textures/metalness.png");
+const metalnessTextture = textureLoader.load("./textures/metalness.png");//导入金属贴图
+const normalTextture = textureLoader.load("./textures/normal.png");//导入法线贴图
 
 //texture纹理显示设置
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
 console.log(texture);
 
-const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+//const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
+const cubGeomery = new THREE.BoxBufferGeometry(1, 1, 1, 100, 100, 100);
 const material = new THREE.MeshStandardMaterial({ //这个材质必须要有光才能看见
-    color: "#ffff00", 
+    //color: "#ffff00", 
     map: texture,  
     alphaMap: alTextture, //利用黑白图片设置做透明纹理。黑色背景能设置为透明
     transparent: true, //材质是否透明
@@ -48,6 +50,7 @@ const material = new THREE.MeshStandardMaterial({ //这个材质必须要有光�
     roughnessMap: roughnessTextture,
     metalness: 1,//金属度，1为金属
     metalnessMap: metalnessTextture,
+    normalMap: normalTextture
 });
 const cube = new THREE.Mesh(cubGeomery, material);
 scene.add(cube);
