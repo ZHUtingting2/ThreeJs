@@ -10,17 +10,6 @@ import gsap from "gsap";
 import * as dat from "dat.gui";
 import { Texture } from "three";
 
-
-//创建进度盒子
-var div = document.createElement("div");
-div.style.width = "200px";
-div.style.height = "200px";
-div.style.position = "fixed";
-div.style.right = 0;
-div.style.top = 0;
-div.style.color = "#fff";
-document.body.appendChild(div);
-
 //1.创建场景
 const scene = new THREE.Scene();
 
@@ -38,9 +27,7 @@ event.onLoad = function(){
     console.log("加载完成");
 };
 event.onProgress = function(url, num, total){//url是图片加载地址，num，是图片加载进度，total是图片总数。加载进度百分比为num/total
-    console.log("加载中");
-    let value = ((num / total) * 100).toFixed(2) + "%";
-    div.innerHTML = value;
+    console.log("加载中")
 };
 event.onError = function(){
     console.log("加载错误");
@@ -49,48 +36,36 @@ event.onError = function(){
 const loadingManager = new THREE.LoadingManager(
     event.onLoad, event.onProgress, event.onError
 );
-const textureLoader = new THREE.TextureLoader(loadingManager);
-const texture = textureLoader.load("./textures/door.png");//创建纹理
-const alTextture = textureLoader.load("./textures/white.png", event.onLoad, event.onProgress, event.onError);
-const AoTextture = textureLoader.load("./textures/doorLine.png");
-const heightTextture = textureLoader.load("./textures/height2.png");//导入置换贴图
-const roughnessTextture = textureLoader.load("./textures/roughness.png");//导入粗糙度贴图
-const metalnessTextture = textureLoader.load("./textures/metalness.png");//导入金属贴图
-const normalTextture = textureLoader.load("./textures/normal.png");//导入法线贴图
+//设置cube纹理加载器
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const envMapTexture = cubeTextureLoader.load([
+    "textures/env/px.jpg",
+    "textures/env/nx.jpg",
+    "textures/env/py.jpg",
+    "textures/env/ny.jpg",
+    "textures/env/pz.jpg",
+    "textures/env/nz.jpg",
+]);
+const cubeTextureLoader2 = new THREE.CubeTextureLoader();
+const envMapTexture2 = cubeTextureLoader2.load([
+    "textures/env/px_copy.jpg",
+    "textures/env/nx_copy.jpg",
+    "textures/env/py_copy.jpg",
+    "textures/env/ny_copy.jpg",
+    "textures/env/pz_copy.jpg",
+    "textures/env/nz_copy.jpg",
+]);
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
+const sphereMaterial = new THREE.MeshStandardMaterial({
+    metalness: 0.9,
+    roughness: 0.1,
+    envMap: envMapTexture
+})
 
-//texture纹理显示设置
-texture.minFilter = THREE.NearestFilter;
-texture.magFilter = THREE.NearestFilter;
-console.log(texture);
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
+scene.background = envMapTexture2
 
-//const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
-const cubGeomery = new THREE.BoxBufferGeometry(1, 1, 1, 100, 100, 100);
-const material = new THREE.MeshStandardMaterial({ //这个材质必须要有光才能看见
-    //color: "#ffff00", 
-    map: texture,  
-    alphaMap: alTextture, //利用黑白图片设置做透明纹理。黑色背景能设置为透明
-    transparent: true, //材质是否透明
-    aoMap: AoTextture,//环境贴图
-    aoMapIntensity: 1,//换境贴图强度
-    displacementMap: heightTextture,
-    displacementScale: 0.08,//最大突出限制0.3公分
-    roughness: 1, //粗糙度为0，代表非常光滑
-    roughnessMap: roughnessTextture,
-    metalness: 1,//金属度，1为金属
-    metalnessMap: metalnessTextture,
-    normalMap: normalTextture
-});
-const cube = new THREE.Mesh(cubGeomery, material);
-scene.add(cube);
-//给cube设置第二组UV
-cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2))
-//添加平面
-const planeGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200)//设置凹凸。平面是两个坐标点
-const plane = new THREE.Mesh(planeGeometry, material);
-plane.position.set(1.5, 0, 0);
-scene.add(plane);
-//给平面设置第二组UV
-planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
 //给物体追加灯光
 const light = new THREE.AmbientLight(0xffffff, 0.5);//环境光，方向是从四面八方过来的
 scene.add(light);

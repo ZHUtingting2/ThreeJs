@@ -45525,7 +45525,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"main/main_P27PBR.js":[function(require,module,exports) {
+},{}],"main/main_P34envTexture.js":[function(require,module,exports) {
 "use strict";
 
 var THREE = _interopRequireWildcard(require("three"));
@@ -45542,16 +45542,6 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 //导入动画库
 
 //导入dat.gui
-
-//创建进度盒子
-var div = document.createElement("div");
-div.style.width = "200px";
-div.style.height = "200px";
-div.style.position = "fixed";
-div.style.right = 0;
-div.style.top = 0;
-div.style.color = "#fff";
-document.body.appendChild(div);
 
 //1.创建场景
 var scene = new THREE.Scene();
@@ -45572,64 +45562,27 @@ event.onLoad = function () {
 event.onProgress = function (url, num, total) {
   //url是图片加载地址，num，是图片加载进度，total是图片总数。加载进度百分比为num/total
   console.log("加载中");
-  var value = (num / total * 100).toFixed(2) + "%";
-  div.innerHTML = value;
 };
 event.onError = function () {
   console.log("加载错误");
 };
 //设置加载管理器，就不用单张进行加载了。TextureLoader在进行调用
 var loadingManager = new THREE.LoadingManager(event.onLoad, event.onProgress, event.onError);
-var textureLoader = new THREE.TextureLoader(loadingManager);
-var texture = textureLoader.load("./textures/door.png"); //创建纹理
-var alTextture = textureLoader.load("./textures/white.png", event.onLoad, event.onProgress, event.onError);
-var AoTextture = textureLoader.load("./textures/doorLine.png");
-var heightTextture = textureLoader.load("./textures/height2.png"); //导入置换贴图
-var roughnessTextture = textureLoader.load("./textures/roughness.png"); //导入粗糙度贴图
-var metalnessTextture = textureLoader.load("./textures/metalness.png"); //导入金属贴图
-var normalTextture = textureLoader.load("./textures/normal.png"); //导入法线贴图
-
-//texture纹理显示设置
-texture.minFilter = THREE.NearestFilter;
-texture.magFilter = THREE.NearestFilter;
-console.log(texture);
-
-//const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
-var cubGeomery = new THREE.BoxBufferGeometry(1, 1, 1, 100, 100, 100);
-var material = new THREE.MeshStandardMaterial({
-  //这个材质必须要有光才能看见
-  //color: "#ffff00", 
-  map: texture,
-  alphaMap: alTextture,
-  //利用黑白图片设置做透明纹理。黑色背景能设置为透明
-  transparent: true,
-  //材质是否透明
-  aoMap: AoTextture,
-  //环境贴图
-  aoMapIntensity: 1,
-  //换境贴图强度
-  displacementMap: heightTextture,
-  displacementScale: 0.08,
-  //最大突出限制0.3公分
-  roughness: 1,
-  //粗糙度为0，代表非常光滑
-  roughnessMap: roughnessTextture,
-  metalness: 1,
-  //金属度，1为金属
-  metalnessMap: metalnessTextture,
-  normalMap: normalTextture
+//设置cube纹理加载器
+var cubeTextureLoader = new THREE.CubeTextureLoader();
+var envMapTexture = cubeTextureLoader.load(["textures/env/px.jpg", "textures/env/nx.jpg", "textures/env/py.jpg", "textures/env/ny.jpg", "textures/env/pz.jpg", "textures/env/nz.jpg"]);
+var cubeTextureLoader2 = new THREE.CubeTextureLoader();
+var envMapTexture2 = cubeTextureLoader2.load(["textures/env/px_copy.jpg", "textures/env/nx_copy.jpg", "textures/env/py_copy.jpg", "textures/env/ny_copy.jpg", "textures/env/pz_copy.jpg", "textures/env/nz_copy.jpg"]);
+var sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
+var sphereMaterial = new THREE.MeshStandardMaterial({
+  metalness: 0.9,
+  roughness: 0.1,
+  envMap: envMapTexture
 });
-var cube = new THREE.Mesh(cubGeomery, material);
-scene.add(cube);
-//给cube设置第二组UV
-cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2));
-//添加平面
-var planeGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200); //设置凹凸。平面是两个坐标点
-var plane = new THREE.Mesh(planeGeometry, material);
-plane.position.set(1.5, 0, 0);
-scene.add(plane);
-//给平面设置第二组UV
-planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2));
+var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
+scene.background = envMapTexture2;
+
 //给物体追加灯光
 var light = new THREE.AmbientLight(0xffffff, 0.5); //环境光，方向是从四面八方过来的
 scene.add(light);
@@ -45705,7 +45658,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61448" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51857" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
@@ -45849,5 +45802,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P27PBR.js"], null)
-//# sourceMappingURL=/main_P27PBR.19a92341.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main/main_P34envTexture.js"], null)
+//# sourceMappingURL=/main_P34envTexture.272742f0.js.map
