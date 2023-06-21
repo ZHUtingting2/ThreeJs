@@ -1,4 +1,4 @@
-//目标：标准网格材质与光照物理效果
+//目标：环境贴图
 
 import * as THREE from "three"
 //导入轨道控制器
@@ -8,7 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from "gsap";
 //导入dat.gui
 import * as dat from "dat.gui";
-import { Texture } from "three";
+//import { Texture } from "three";
 
 //1.创建场景
 const scene = new THREE.Scene();

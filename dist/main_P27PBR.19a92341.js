@@ -45590,15 +45590,15 @@ var metalnessTextture = textureLoader.load("./textures/metalness.png"); //导入
 var normalTextture = textureLoader.load("./textures/normal.png"); //导入法线贴图
 
 //texture纹理显示设置
-texture.minFilter = THREE.NearestFilter;
-texture.magFilter = THREE.NearestFilter;
+//texture.minFilter = THREE.NearestFilter;
+//texture.magFilter = THREE.NearestFilter;
 console.log(texture);
 
 //const cubGeomery = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100);
-var cubGeomery = new THREE.BoxBufferGeometry(1, 1, 1, 100, 100, 100);
+var cubGeomery = new THREE.BoxGeometry(2, 2, 2, 100, 100, 100);
 var material = new THREE.MeshStandardMaterial({
   //这个材质必须要有光才能看见
-  //color: "#ffff00", 
+  color: "#ffff00",
   map: texture,
   alphaMap: alTextture,
   //利用黑白图片设置做透明纹理。黑色背景能设置为透明
@@ -45617,16 +45617,18 @@ var material = new THREE.MeshStandardMaterial({
   metalness: 1,
   //金属度，1为金属
   metalnessMap: metalnessTextture,
-  normalMap: normalTextture
+  normalMap: normalTextture,
+  opacity: 1,
+  side: THREE.DoubleSide
 });
 var cube = new THREE.Mesh(cubGeomery, material);
 scene.add(cube);
 //给cube设置第二组UV
 cubGeomery.setAttribute("uv2", new THREE.BufferAttribute(cubGeomery.attributes.uv.array, 2));
 //添加平面
-var planeGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200); //设置凹凸。平面是两个坐标点
+var planeGeometry = new THREE.PlaneBufferGeometry(2, 2, 200, 200); //设置凹凸。平面是两个坐标点
 var plane = new THREE.Mesh(planeGeometry, material);
-plane.position.set(1.5, 0, 0);
+plane.position.set(3, 0, 0);
 scene.add(plane);
 //给平面设置第二组UV
 planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2));
@@ -45705,7 +45707,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61448" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51511" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
